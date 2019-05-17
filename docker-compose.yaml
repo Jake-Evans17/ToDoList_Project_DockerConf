@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+        nginx:
+                image: nginx:latest
+                depends_on:
+                        - front-con
+                        - back-con
+                volumes:
+                - type: bind
+                  source: ./nginx.conf
+                  target: /etc/nginx/nginx.conf
+                ports:
+                        - target: 80
+                          published: 80
+                          protocol: tcp
+        db-con:
+                image: mysql:5.7
+                container_name: db-con
+                environment:
+                        - MYSQL_ROOT_PASSWORD=password
+                        - MYSQL_DATABASE=project_db
+        front-con:
+                image: front-img
+                build: ./front-end
+        back-con:
+                image: back-img
+                build: ./back-end
+                depends_on:
+                        - db-con
+
